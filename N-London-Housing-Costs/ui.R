@@ -26,21 +26,19 @@ data_tab <- tabItem("data", fluidRow(variable_choices, price_choices, data_table
 
 
 ### 'Data Exploration' page ####################################################
-a <-  box(selectizeInput("plot_var", "Select variable for data exploration:", choices = c("Type", "Tenure", "Bedrooms", "Price_Paid"), selected = "Price_Paid"))
-
-b <- box(conditionalPanel("input.plot_var == 'Price_Paid'", sliderInput("bins", "Binwidth:", min = 25000, max = 500000, value = 125000, step = 25000)))
+a <-  box(selectizeInput("plot_var", "Select variable for data exploration:", choices = c("Type", "Tenure", "Bedrooms", "Price_Paid", "Location"), selected = "Price_Paid"), conditionalPanel("input.plot_var == 'Price_Paid'", sliderInput("bins", "Binwidth:", min = 25000, max = 500000, value = 125000, step = 25000)))
 
 # Graph
 graph <- box(plotOutput("plots"))
 
 # Set up dashboard components
-exploration_tab <- tabItem("exploration", fluidRow(a, b, graph))
+exploration_tab <- tabItem("exploration", fluidRow(a, graph))
 
 
 ### ??? ########################################################################
 
 dashboardPage(
-  skin = "yellow",
+  skin = "purple",
   dashboardHeader(title = "N13 Housing Prices"),
   dashboardSidebar(
     sidebarMenu(
