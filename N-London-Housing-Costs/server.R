@@ -28,25 +28,48 @@ shinyServer(function(input, output, session) {
   
   # Create a datatable
   output$table <- renderDataTable({
-    data %>% filter(Price_Grouping == input$prices) %>% select(input$variables)
+    if (input$grouping) {
+    data %>% 
+      filter(Price_Grouping == input$prices) %>% 
+      select(input$variables)
+    } else {
+      data %>% 
+        select(input$variables)
+    }
   })
   
   
   # Create plots
   output$plots <- renderPlot({
     if (input$plot_var == "Price_Paid") {
-      ggplot(data, aes(x = Price_Paid)) + geom_histogram(binwidth = input$bins, fill = "#b2abd2") + labs(title = "Histogram of Price Paid for Homes", x = "Price Paid (in GBP)", y = "Count")
+      ggplot(data, aes(x = Price_Paid)) + 
+        geom_histogram(binwidth = input$bins, fill = "#b2abd2") + 
+        labs(title = "Histogram of Price Paid for Homes", x = "Price Paid (in GBP)", y = "Count")
     } else if (input$plot_var == "Type") {
-      ggplot(data, aes(x = Type, y = Price_Paid)) + geom_boxplot(fill = "#b2abd2") + labs(title = "Boxplot of Price Paid by Type", y = "Price Paid (in GBP)")
+      ggplot(data, aes(x = Type, y = Price_Paid)) + 
+        geom_boxplot(fill = "#b2abd2") + 
+        labs(title = "Boxplot of Price Paid by Type", y = "Price Paid (in GBP)")
     } else if (input$plot_var == "Tenure") {
-      ggplot(data, aes(x = Tenure, y = Price_Paid)) + geom_boxplot(fill = "#b2abd2") + labs(title = "Boxplot of Price Paid by Tenure", y = "Price Paid (in GBP)")
+      ggplot(data, aes(x = Tenure, y = Price_Paid)) + 
+        geom_boxplot(fill = "#b2abd2") + 
+        labs(title = "Boxplot of Price Paid by Tenure", y = "Price Paid (in GBP)")
     } else if (input$plot_var == "Bedrooms") {
-      ggplot(data, aes(x = Bedrooms, y = Price_Paid)) + geom_boxplot(fill = "#b2abd2") + labs(title = "Boxplot of Price Paid by Bedrooms", y = "Price Paid (in GBP)")
+      ggplot(data, aes(x = Bedrooms, y = Price_Paid)) + 
+        geom_boxplot(fill = "#b2abd2") + 
+        labs(title = "Boxplot of Price Paid by Bedrooms", y = "Price Paid (in GBP)")
     } else {
-      ggplot(data, aes(x = Longitude, y = Latitude)) + geom_point(aes(col = Price_Grouping), size = 1.3) + labs(title = "Price Paid by Location Within N13 Postcode", x = "Longitude", y = "Latitude") + scale_color_brewer(palette = "PuOr")
+      ggplot(data, aes(x = Longitude, y = Latitude)) + 
+        geom_point(aes(col = Price_Grouping), size = 1.3) + 
+        labs(title = "Price Paid by Location Within N13 Postcode", x = "Longitude", y = "Latitude") + 
+        scale_color_brewer(palette = "PuOr")
     }
   })
 
   
+  output$summaries <- renderDataTable({
+    data %>%
+      group_by(Type) %>%
+      summarise(Mean = round(mean(Price_Paid), digits = 0), Min = min(Price_Paid), Q1 = quantile(Price_Paid, probs = 0.25), Median = median(Price_Paid), Q3 = quantile(Price_Paid, probs = 0.75), Max = max(Price_Paid))
+  })
   
 })

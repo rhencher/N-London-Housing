@@ -13,26 +13,45 @@ about_tab <- tabItem("about", fluidRow(box(about_info, width = 8)))
 ### 'Data' page ################################################################
                    
 # Variable selection for datatable
-variable_choices <- box(checkboxGroupInput("variables", "Select the variable(s) to display: ", choices = c("Date", "Address", "Postcode", "Type", "New_Build", "Tenure", "Bedrooms", "Latitude", "Longitude", "Price_Paid"), selected = c("Date", "Postcode", "Type", "Bedrooms", "Price_Paid")), width = 2)
+variable_choices <- box(checkboxGroupInput("variables", 
+                                           h4("Select the variable(s) to display:"), 
+                                           choices = c("Date", "Address", "Postcode", "Type", "New_Build", "Tenure", "Bedrooms", "Latitude", "Longitude", "Price_Paid"), 
+                                           selected = c("Date", "Postcode", "Type", "Bedrooms", "Price_Paid")), 
+                        width = 3)
 
-# Subsetting by price for datatable
-price_choices <- box(selectInput("prices", "Subset the data by price grouping:", choices = c("£1,125,000 or more", "£750,000-£1,124,999", "£375,000-£749,999", "Less than £375,000")), width = 3)
+grouping_choice <- box(checkboxInput("grouping", 
+                                     h4("Subset the data by price grouping?")), 
+                       conditionalPanel("input.grouping", 
+                                        selectInput("prices", "Price grouping:", 
+                                                    choices = c("£1,125,000 or more", "£750,000-£1,124,999", "£375,000-£749,999", "Less than £375,000"))), 
+                       width = 3)
 
 # Create a datatable
-data_table <- box(dataTableOutput("table"), width = 10)
+data_table <- box(dataTableOutput("table"), 
+                  width = 10)
 
 # Set up dashboard components
-data_tab <- tabItem("data", fluidRow(variable_choices, price_choices, data_table))
+data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, data_table))
 
 
 ### 'Data Exploration' page ####################################################
-a <-  box(selectizeInput("plot_var", "Select variable for data exploration:", choices = c("Type", "Tenure", "Bedrooms", "Price_Paid", "Location"), selected = "Price_Paid"), conditionalPanel("input.plot_var == 'Price_Paid'", sliderInput("bins", "Binwidth:", min = 25000, max = 500000, value = 125000, step = 25000)))
+plot_generator <-  box(selectizeInput("plot_var", 
+                                      "Select variable for data exploration:", 
+                                      choices = c("Type", "Tenure", "Bedrooms", "Price_Paid", "Location"), 
+                                      selected = "Price_Paid"), 
+                       conditionalPanel("input.plot_var == 'Price_Paid'", 
+                                        sliderInput("bins", 
+                                                    "Binwidth:", 
+                                                    min = 25000, 
+                                                    max = 500000, 
+                                                    value = 125000, 
+                                                    step = 25000)))
 
 # Graph
-graph <- box(plotOutput("plots"))
+graph <- box(plotOutput("plots"), dataTableOutput("summaries"), width = 8)
 
 # Set up dashboard components
-exploration_tab <- tabItem("exploration", fluidRow(a, graph))
+exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
 ### ??? ########################################################################
