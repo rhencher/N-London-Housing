@@ -65,11 +65,29 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  
   output$summaries <- renderDataTable({
-    data %>%
-      group_by(Type) %>%
-      summarise(Mean = round(mean(Price_Paid), digits = 0), Min = min(Price_Paid), Q1 = quantile(Price_Paid, probs = 0.25), Median = median(Price_Paid), Q3 = quantile(Price_Paid, probs = 0.75), Max = max(Price_Paid))
+    if (input$plot_var == "Price_Paid") {
+      data %>%
+        select(Date, Address, Postcode, Type, Tenure, Bedrooms, Price_Paid)
+    } else if (input$plot_var == "Type") {
+      data %>%
+        group_by(Type) %>%
+        summarise(Mean = round(mean(Price_Paid), digits = 0), Min = min(Price_Paid), Q1 = quantile(Price_Paid, probs = 0.25), Median = median(Price_Paid), Q3 = quantile(Price_Paid, probs = 0.75), Max = max(Price_Paid))
+    } else if (input$plot_var == "Tenure") {
+      data %>%
+        group_by(Tenure) %>%
+        summarise(Mean = round(mean(Price_Paid), digits = 0), Min = min(Price_Paid), Q1 = quantile(Price_Paid, probs = 0.25), Median = median(Price_Paid), Q3 = quantile(Price_Paid, probs = 0.75), Max = max(Price_Paid))
+    } else if (input$plot_var == "Bedrooms") {
+      data %>%
+        group_by(Bedrooms) %>%
+        summarise(Mean = round(mean(Price_Paid), digits = 0), Min = min(Price_Paid), Q1 = quantile(Price_Paid, probs = 0.25), Median = median(Price_Paid), Q3 = quantile(Price_Paid, probs = 0.75), Max = max(Price_Paid))
+    } else {
+      data %>%
+        select(Latitude, Longitude, Price_Paid)
+    }
   })
+  
+  
+
   
 })

@@ -54,6 +54,13 @@ graph <- box(plotOutput("plots"), dataTableOutput("summaries"), width = 8)
 exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
+### 'Modeling' page ############################################################
+
+X <- box()
+# Set up dashboard components
+modeling_tab <- tabItem("modeling", fluidRow(X))
+
+
 ### ??? ########################################################################
 
 dashboardPage(
@@ -61,16 +68,16 @@ dashboardPage(
   dashboardHeader(title = "N13 Housing Prices"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("About", tabName = "about"),
-      menuItem("Data", tabName = "data"),
-      menuItem("Data Exploration", tabName = "exploration"),
-      menuItem("Modeling", tabName = "modeling"),
-      menuItem("Prediction", tabName = "prediction")
+      menuItem("About", tabName = "about", icon = icon("info")),
+      menuItem("Data", tabName = "data", icon = icon("table")),
+      menuItem("Data Exploration", tabName = "exploration", icon = icon("chart-line")),
+      menuItem("Modeling", tabName = "modeling", icon = icon("house")),
+      menuItem("Prediction", tabName = "prediction", icon = icon("sterling-sign"))
     )
   ),
   dashboardBody(
     tabItems(
-      about_tab, data_tab, exploration_tab
+      about_tab, data_tab, exploration_tab, modeling_tab
     )
   )
 )
