@@ -3,6 +3,7 @@ library(shinydashboard)
 library(tidyverse)
 library(lubridate)
 library(DT)
+library(ggplot2)
 
 shinyServer(function(input, output, session) {
 
@@ -11,6 +12,7 @@ shinyServer(function(input, output, session) {
     data$Type <- as.factor(data$Type)
     data$'New-build' <- as.factor(data$'New-build')
     data$Tenure <- as.factor(data$Tenure)
+    data$Bedrooms <- as.factor(data$Bedrooms)
     data$Date <- as.Date(data$Date, format="%m/%d/%Y")
     data$Lat <- round(data$Lat, digits = 4)
     data$Lng <- round(data$Lng, digits = 4)
@@ -29,11 +31,15 @@ shinyServer(function(input, output, session) {
     data %>% filter(Price_Grouping == input$prices) %>% select(input$variables)
   })
   
-  # ????
-  output$boxplot <- renderPlot({
-    g <- ggplot(data, aes(x = Type, y = Price_Paid))  
-      g + geom_boxplot()
+  # Create plots
+  output$plots <- renderPlot({
+    if (input$plot_var == "Price_Paid") {
+      ggplot(data, aes(x = Price_Paid)) + geom_histogram(binwidth = input$bins)
+    } else {
+      ggplot(data, aes(x = input$plot_var, y = Price_Paid)) + geom_boxplot()
+    }
   })
+
   
   
 })
