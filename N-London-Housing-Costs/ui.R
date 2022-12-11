@@ -1,6 +1,13 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(maps)
+library(dplyr)
+library(leaflet)
+library(shinycssloaders)
+library(shinythemes)
+library(rio)
+library(stargazer)
 
 ### 'About' page ###############################################################
 
@@ -15,8 +22,21 @@ about_tab <- tabItem("about", fluidRow(box(about_info, width = 8)))
 # Variable selection for datatable
 variable_choices <- box(checkboxGroupInput("variables", 
                                            h3("Select the variable(s) to display:"), 
-                                           choices = c("Date", "Address", "Postcode", "Type", "New_Build", "Tenure", "Bedrooms", "Latitude", "Longitude", "Price_Paid"), 
-                                           selected = c("Date", "Postcode", "Type", "Bedrooms", "Price_Paid")), 
+                                           choices = c("Date", 
+                                                       "Address", 
+                                                       "Postcode", 
+                                                       "Type", 
+                                                       "New_Build", 
+                                                       "Tenure", 
+                                                       "Bedrooms", 
+                                                       "Latitude", 
+                                                       "Longitude", 
+                                                       "Price_Paid"), 
+                                           selected = c("Date", 
+                                                        "Postcode", 
+                                                        "Type", 
+                                                        "Bedrooms", 
+                                                        "Price_Paid")), 
                         width = 3)
 
 grouping_choice <- box(checkboxInput("grouping", 
@@ -24,7 +44,10 @@ grouping_choice <- box(checkboxInput("grouping",
                        conditionalPanel("input.grouping", 
                                         selectInput("prices", 
                                                     h4("Price grouping:"), 
-                                                    choices = c("£1,125,000 or more", "£750,000-£1,124,999", "£375,000-£749,999", "Less than £375,000"))), 
+                                                    choices = c("£1,125,000 or more", 
+                                                                "£750,000-£1,124,999", 
+                                                                "£375,000-£749,999", 
+                                                                "Less than £375,000"))), 
                        width = 3)
 
 # Create a datatable
@@ -36,10 +59,15 @@ data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, data_tab
 
 
 ### 'Data Exploration' page ####################################################
-plot_generator <-  box(selectizeInput("plot_var", 
-                                      h3("Select variable for data exploration:"), 
-                                      choices = c("Type", "Tenure", "Bedrooms", "Price_Paid", "Location"), 
-                                      selected = "Price_Paid"), 
+plot_generator <-  box(selectInput("plot_var", 
+                                    h3("Select variable for data exploration:"), 
+                                    choices = c("Type", 
+                                                "Tenure", 
+                                                "Bedrooms", 
+                                                "Price_Paid", 
+                                                "Location", 
+                                                "Date"), 
+                                    selected = "Price_Paid"), 
                        conditionalPanel("input.plot_var == 'Price_Paid'", 
                                         sliderInput("bins", 
                                                     h5("Binwidth:"), 
@@ -49,37 +77,45 @@ plot_generator <-  box(selectizeInput("plot_var",
                                                     step = 25000)))
 
 # Graph
-graph <- box(plotOutput("plots"), dataTableOutput("summaries"), width = 8)
+graph <- box(plotOutput("plots"), 
+             dataTableOutput("summaries"), 
+             width = 8)
 
 # Set up dashboard components
 exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
 ### 'Modeling' page ############################################################
+
 # Set up explanatory variables for linear model
-expl_vars <- box(checkboxGroupInput("expl_vars", 
-                                    h3("Select the variable(s) to display:"), 
-                                    choices = c("Type", "New_Build", "Tenure", "Bedrooms")), 
-                                    width = 3)
+expl_vars <- box(selectizeInput("expl_vars", 
+                                h3("Select the variable(s) to display:"), 
+                                choices = c("Type", "New_Build", "Tenure", "Bedrooms"),
+                                multiple = TRUE),
+                 width = 3)
 
 training <- box(sliderInput("train_pct", 
                             h3("Train/test split %"), 
                             min = 0, 
                             max = 100, 
-                            value = 75), 
+                            value = 75,
+                            step = 1), 
                 textOutput("cntTrain"), 
                 textOutput("cntTest"),
                 width = 3)
 
 train_button <- box(actionButton("train_lm", 
                                  h4("Train")),
-                 width = 2)
+                    width = 2)
+
 
 tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling"),
+  tabPanel("Modeling", box(verbatimTextOutput("Model"), title = "Model"), box(plotOutput("Prediction"), title = "Best Fit Line"), box(plotOutput("residualPlots"), title = "Diagnostic Plots"),
+           width = 6,
+           title = "Model Summary"),
   tabPanel("Model Fitting"),
   tabPanel("Prediction"))
 
