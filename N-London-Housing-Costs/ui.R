@@ -90,7 +90,7 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 # Set up explanatory variables for linear model
 expl_vars <- box(selectizeInput("expl_vars", 
                                 h3("Select the variable(s) to display:"), 
-                                choices = c("Type", "New_Build", "Tenure", "Bedrooms"),
+                                choices = c("Type", "New_Build", "Tenure", "Bedrooms", "Price_Paid"),
                                 multiple = TRUE),
                  width = 3)
 
@@ -113,7 +113,10 @@ tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling"),
+  tabPanel("Modeling", box(
+    verbatimTextOutput("model"),
+    width = 6,
+    title = "Model Summary")),
   tabPanel("Model Fitting"),
   tabPanel("Prediction"))
 

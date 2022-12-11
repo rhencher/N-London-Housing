@@ -102,17 +102,7 @@ shinyServer(function(input, output, session) {
   })
   
 
-
-  
-  
-  
-  
-  
-  
-  input_dataset <- reactive({
-    data
-  })
-  
+  # Split data into training and test set
   input_dataset_model <- reactive({
     if (is.null(input$expl_vars)) {
       dt <- data
@@ -128,7 +118,7 @@ shinyServer(function(input, output, session) {
   })
   
   set.seed(100)
-  trainingRowIndex <-
+  training_split <-
     reactive({
       sample(1:nrow(input_dataset_model()),
              split_slider() * nrow(input_dataset_model()))
@@ -136,12 +126,12 @@ shinyServer(function(input, output, session) {
   
   training_data <- reactive({
     tmptraindt <- input_dataset_model()
-    tmptraindt[trainingRowIndex(), ]
+    tmptraindt[training_split(), ]
   })
   
   test_data <- reactive({
     tmptestdt <- input_dataset_model()
-    tmptestdt[-trainingRowIndex(),]
+    tmptestdt[-training_split(),]
   })
   
   output$cntTrain <-
@@ -152,7 +142,16 @@ shinyServer(function(input, output, session) {
   
   
 
+  f <- reactive({
+    as.formula(paste("Price_Paid", "~."))
+  })
   
+  
+  linear_model <- reactive({
+    lm(f(), data = training_data())
+  })
+  
+  output$model <- renderPrint(summary(linear_model()))
   
   
 })
