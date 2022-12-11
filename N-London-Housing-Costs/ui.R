@@ -89,8 +89,8 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 # Set up explanatory variables for linear model
 expl_vars <- box(selectizeInput("expl_vars", 
-                                h3("Select the variable(s) to display:"), 
-                                choices = c("Type", "New_Build", "Tenure", "Bedrooms", "Price_Paid"),
+                                h3("Choose one or more explanatory variables:"), 
+                                choices = c("Type", "Tenure", "Bedrooms"),
                                 multiple = TRUE),
                  width = 3)
 
@@ -104,8 +104,10 @@ training <- box(sliderInput("train_pct",
                 textOutput("cntTest"),
                 width = 3)
 
-train_button <- box(actionButton("train_lm", 
-                                 h4("Train")),
+train_button <- box(actionButton("predict_lm", 
+                                 h4("Predict")),
+                    conditionalPanel("input.predict_lm == 1",
+                                     verbatimTextOutput("lm_pred")),
                     width = 2)
 
 

@@ -97,7 +97,7 @@ shinyServer(function(input, output, session) {
         select(Date, Price_Paid)
     } else {
       data %>%
-        select(Latitude, Longitude, Price_Paid)
+        select(Latitude, Longitude, Price_Grouping)
     }
   })
   
@@ -105,10 +105,10 @@ shinyServer(function(input, output, session) {
   # Split data into training and test set
   input_dataset_model <- reactive({
     if (is.null(input$expl_vars)) {
-      dt <- data
+      dt <- data[, c("Type", "Tenure", "Bedrooms", "Price_Paid")]
     }
     else{
-      dt <- data[, c(input$expl_vars)]
+      dt <- data[, c("Price_Paid", input$expl_vars)]
     }
   })
   
@@ -152,6 +152,34 @@ shinyServer(function(input, output, session) {
   })
   
   output$model <- renderPrint(summary(linear_model()))
+  
+  ######################################################
+  
+  lm_predict <- eventReactive(input$predict_lm, {
+    lm <- linear_model()
+    test <- test_data()
+    pred <- predict(lm, test)
+    return(pred)
+    })
+  
+  output$lm_pred = renderPrint(lm_predict())
+  
+ ######################################################
+  
+  randfor_predict <- reactive({
+  
+  rf_model <- train(Price_Paid ~ Type + Tenure + Bedrooms, 
+                    data = training_data(), 
+                    method = "rf", 
+                    preProcess = c("center", "scale"), 
+                    trControl = control, 
+                    tuneGrid = expand.grid(mtry = 1:2))
+
+  predict(rf_model, newdata = test_data())
+ 
+  })
+  
+  output$rf_pred = renderUI(randfor_predict())  
   
   
 })
