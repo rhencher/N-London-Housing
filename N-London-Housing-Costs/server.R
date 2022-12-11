@@ -153,18 +153,18 @@ shinyServer(function(input, output, session) {
   
   output$model <- renderPrint(summary(linear_model()))
   
-  ######################################################
   
   lm_predict <- eventReactive(input$predict_lm, {
     lm <- linear_model()
     test <- test_data()
     pred <- predict(lm, test)
-    return(pred)
+    rmse <- postResample(pred, obs = test$Price_Paid)
+    return(rmse)
     })
   
   output$lm_pred = renderPrint(lm_predict())
   
- ######################################################
+ ##############################################################################
   
   randfor_predict <- reactive({
   

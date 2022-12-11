@@ -108,18 +108,21 @@ train_button <- box(actionButton("predict_lm",
                                  h4("Predict")),
                     conditionalPanel("input.predict_lm == 1",
                                      verbatimTextOutput("lm_pred")),
-                    width = 2)
+                    width = 4)
 
 
 tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling", box(
+  tabPanel("Modeling"),
+  
+  tabPanel("Model Fitting", box(
     verbatimTextOutput("model"),
     width = 6,
-    title = "Model Summary")),
-  tabPanel("Model Fitting"),
+    title = "Model Summary"),
+    ),
+  
   tabPanel("Prediction"))
 
 
