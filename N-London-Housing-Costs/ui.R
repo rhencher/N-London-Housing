@@ -14,7 +14,7 @@ about_tab <- tabItem("about", fluidRow(box(about_info, width = 8)))
                    
 # Variable selection for datatable
 variable_choices <- box(checkboxGroupInput("variables", 
-                                           h3("Select variable(s) to display:"), 
+                                           h3("Select the variable(s) to display:"), 
                                            choices = c("Date", "Address", "Postcode", "Type", "New_Build", "Tenure", "Bedrooms", "Latitude", "Longitude", "Price_Paid"), 
                                            selected = c("Date", "Postcode", "Type", "Bedrooms", "Price_Paid")), 
                         width = 3)
@@ -37,7 +37,7 @@ data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, data_tab
 
 ### 'Data Exploration' page ####################################################
 plot_generator <-  box(selectizeInput("plot_var", 
-                                      h3("Variable for data exploration:"), 
+                                      h3("Select variable for data exploration:"), 
                                       choices = c("Type", "Tenure", "Bedrooms", "Price_Paid", "Location"), 
                                       selected = "Price_Paid"), 
                        conditionalPanel("input.plot_var == 'Price_Paid'", 
@@ -57,19 +57,23 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 ### 'Modeling' page ############################################################
 # Set up explanatory variables for linear model
-training <- box(checkboxGroupInput("expl_vars", 
-                                           h3("Explanatory variables:"), 
-                                           choices = c("Type", "New_Build", "Tenure", "Bedrooms")), 
-                        sliderInput("train_pct", 
-                               h3("Train/test split %"), 
-                               min = 0, 
-                               max = 100, 
-                               value = 75), 
-                   textOutput("cntTrain"), 
-                   textOutput("cntTest"),
-                   actionButton("train_lm", 
-                                h4("Train")),
-                   width = 3)
+expl_vars <- box(checkboxGroupInput("expl_vars", 
+                                    h3("Select the variable(s) to display:"), 
+                                    choices = c("Type", "New_Build", "Tenure", "Bedrooms")), 
+                                    width = 3)
+
+training <- box(sliderInput("train_pct", 
+                            h3("Train/test split %"), 
+                            min = 0, 
+                            max = 100, 
+                            value = 75), 
+                textOutput("cntTrain"), 
+                textOutput("cntTest"),
+                width = 3)
+
+train_button <- box(actionButton("train_lm", 
+                                 h4("Train")),
+                 width = 2)
 
 tabs <- tabBox(
   id = "tabset1",
@@ -81,7 +85,7 @@ tabs <- tabBox(
 
 
 # Set up dashboard components
-modeling_tab <- tabItem("modeling", fluidRow(training, tabs))
+modeling_tab <- tabItem("modeling", fluidRow(training, expl_vars, train_button, tabs))
 
 
 ### ??? ########################################################################

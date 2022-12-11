@@ -4,6 +4,7 @@ library(tidyverse)
 library(lubridate)
 library(DT)
 library(ggplot2)
+library(caret)
 
 shinyServer(function(input, output, session) {
 
@@ -86,6 +87,13 @@ shinyServer(function(input, output, session) {
         select(Latitude, Longitude, Price_Paid)
     }
   })
+
+  
+  
+  
+  
+  
+  
 
 
   
