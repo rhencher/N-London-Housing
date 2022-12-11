@@ -86,8 +86,7 @@ shinyServer(function(input, output, session) {
         select(Latitude, Longitude, Price_Paid)
     }
   })
-  
-  
+
 
   
 })
