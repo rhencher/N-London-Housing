@@ -87,47 +87,43 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 ### 'Modeling' page ############################################################
 
-# Set up explanatory variables for linear model
-expl_vars <- box(selectizeInput("expl_vars", 
-                                h3("Choose one or more explanatory variables:"), 
-                                choices = c("Type", "Tenure", "Bedrooms"),
-                                multiple = TRUE),
-                 width = 3)
-
-training <- box(sliderInput("train_pct", 
-                            h3("Train/test split %"), 
-                            min = 0, 
-                            max = 100, 
-                            value = 75,
-                            step = 1), 
-                textOutput("cntTrain"), 
-                textOutput("cntTest"),
-                width = 3)
-
-train_button <- box(actionButton("predict_lm", 
-                                 h4("Predict")),
-                    conditionalPanel("input.predict_lm == 1",
-                                     verbatimTextOutput("lm_pred")),
-                    width = 4)
-
-
 tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
   tabPanel("Modeling"),
   
-  tabPanel("Model Fitting", box(
-    verbatimTextOutput("model"),
-    width = 6,
-    title = "Model Summary"),
-    ),
+  tabPanel("Model Fitting", 
+           box(sliderInput("train_pct", 
+                           h3("Train/test split %"), 
+                           min = 0, 
+                           max = 100, 
+                           value = 75,
+                           step = 1), 
+               textOutput("cntTrain"), 
+               textOutput("cntTest"),
+               width = 3), 
+           box(selectizeInput("expl_vars", 
+                              h4("Choose one or more explanatory variables:"), 
+                              choices = c("Type", "Tenure", "Bedrooms"),
+                              multiple = TRUE),
+               width = 3),
+           box(verbatimTextOutput("model"),
+               title = h4("Model Summary")),
+           ),
   
-  tabPanel("Prediction"))
+  tabPanel("Prediction", 
+           box(actionButton("predict_lm", 
+                            h4("Predict")),
+               conditionalPanel("input.predict_lm == 1",
+                                verbatimTextOutput("lm_pred")),
+               width = 4)
+           )
+  )
 
 
 # Set up dashboard components
-modeling_tab <- tabItem("modeling", fluidRow(training, expl_vars, train_button, tabs))
+modeling_tab <- tabItem("modeling", fluidRow(tabs))
 
 
 ### ??? ########################################################################
