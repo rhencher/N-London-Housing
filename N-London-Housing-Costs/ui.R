@@ -113,9 +113,7 @@ tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling", box(verbatimTextOutput("Model"), title = "Model"), box(plotOutput("Prediction"), title = "Best Fit Line"), box(plotOutput("residualPlots"), title = "Diagnostic Plots"),
-           width = 6,
-           title = "Model Summary"),
+  tabPanel("Modeling"),
   tabPanel("Model Fitting"),
   tabPanel("Prediction"))
 

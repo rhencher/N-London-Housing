@@ -109,11 +109,11 @@ shinyServer(function(input, output, session) {
   
   
   
-  InputDataset <- reactive({
+  input_dataset <- reactive({
     data
   })
   
-  InputDataset_model <- reactive({
+  input_dataset_model <- reactive({
     if (is.null(input$expl_vars)) {
       dt <- data
     }
@@ -123,103 +123,35 @@ shinyServer(function(input, output, session) {
   })
   
   
-  splitSlider <- reactive({
+  split_slider <- reactive({
     input$train_pct / 100
   })
   
   set.seed(100)
   trainingRowIndex <-
     reactive({
-      sample(1:nrow(InputDataset_model()),
-             splitSlider() * nrow(InputDataset_model()))
+      sample(1:nrow(input_dataset_model()),
+             split_slider() * nrow(input_dataset_model()))
     })
   
-  trainingData <- reactive({
-    tmptraindt <- InputDataset_model()
+  training_data <- reactive({
+    tmptraindt <- input_dataset_model()
     tmptraindt[trainingRowIndex(), ]
   })
   
-  testData <- reactive({
-    tmptestdt <- InputDataset_model()
+  test_data <- reactive({
+    tmptestdt <- input_dataset_model()
     tmptestdt[-trainingRowIndex(),]
   })
   
-  
-  
   output$cntTrain <-
-    renderText(paste("Training data:", NROW(trainingData()), "records"))
+    renderText(paste("Training data:", NROW(training_data()), "records"))
   output$cntTest <-
-    renderText(paste("Testing data:", NROW(testData()), "records"))
+    renderText(paste("Testing data:", NROW(test_data()), "records"))
   
   
-  
-  
-  f <- reactive({
-    as.formula(paste("Price_Paid", "~."))
-  })
-  
-  Linear_Model <- reactive({
-    lm(f(), data = trainingData())
-  })
-
-  
-  Importance <- reactive({
-    varImp(Linear_Model(), scale = FALSE)
-  })
-  
-  tmpImp <- reactive({
-    
-    imp <- as.data.frame(varImp(Linear_Model()))
-    imp <- data.frame(overall = imp$Overall,
-                      names   = rownames(imp))
-    imp[order(imp$overall, decreasing = T),]
-    
-  })
-
-  
-  price_predict <- reactive({
-    predict(Linear_Model(), testData())
-  })
-  
-  tmp <- reactive({
-    tmp1 <- testData()
-    tmp1[, c("Price_Paid")]
-  })
-  
-  
-  actuals_preds <-
-    reactive({
-      data.frame(cbind(actuals = tmp(), predicted = price_predict()))
-    })
-  
-  Fit <-
-    reactive({
-      (
-        plot(
-          actuals_preds()$actuals,
-          actuals_preds()$predicted,
-          pch = 16,
-          cex = 1.3,
-          col = "blue",
-          main = "Best Fit Line",
-          xlab = "Actual",
-          ylab = "Predicted"
-        )
-      )
-    })
-  
-  output$Prediction <- renderPlot(Fit())
-  
-  output$residualPlots <- renderPlot({
-    par(mfrow = c(2, 2)) # Change the panel layout to 2 x 2
-    plot(Linear_Model())
-    par(mfrow = c(1, 1)) # Change back to 1 x 1
-    
-  })
   
 
-  
-  
   
   
   
