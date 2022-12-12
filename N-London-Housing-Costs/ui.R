@@ -211,7 +211,7 @@ tabs <- tabBox(
                numericInput("tenure", "Tenure:", min = 1, max = 2, value = 1),
                numericInput("bedrooms", "Bedrooms:", min = 1, max = 6, value = 1),
                actionButton("prediction", "Predict"),
-               uiOutput("pred"))
+               verbatimTextOutput("pred"))
            )
   )
 

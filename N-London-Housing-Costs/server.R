@@ -223,17 +223,16 @@ shinyServer(function(input, output, session) {
   
   output$bt_pred = renderPrint(bt_predict())  
   
-  
-  # TEXT
+  # Prediction using linear regression model
   prediction <- eventReactive(input$prediction, {
     lm <- linear_model()
     pred_df <- data.frame(Type = input$type,
-                         Tenure = input$tenure,
-                         Bedrooms = input$bedrooms)
+                          Tenure = input$tenure,
+                          Bedrooms = input$bedrooms)
     pred_df <- pred_df[,input$expl_vars]
-    final_pred <- predict(lm, pred_df)
+    final_pred <- predict(lm, test_data())
     return(as.character(final_pred))
   })
   
-  output$pred = renderUI(prediction())
+  output$pred = renderPrint(prediction())
 })
