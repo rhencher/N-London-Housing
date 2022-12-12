@@ -5,9 +5,6 @@ library(lubridate)
 library(DT)
 library(ggplot2)
 library(caret)
-library(maps)
-library(leaflet)
-library(plotly)
 library(stargazer)
 
 shinyServer(function(input, output, session) {
