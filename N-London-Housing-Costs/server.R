@@ -8,7 +8,6 @@ library(caret)
 library(maps)
 library(leaflet)
 library(plotly)
-library(corrplot)
 library(stargazer)
 
 shinyServer(function(input, output, session) {
@@ -173,22 +172,33 @@ shinyServer(function(input, output, session) {
   
   output$lm_pred = renderPrint(lm_predict())
   
- ##############################################################################
+  rf_model <- reactive({
+    control <- trainControl(method = "cv", number = 5)
+    training <- training_data()
+    rf <- train(Price_Paid ~ Type + Tenure + Bedrooms, 
+          data = training, 
+          method = "rf", 
+          preProcess = c("center", "scale"), 
+          trControl = control, 
+          tuneGrid = expand.grid(mtry = 1:3))
+    return(rf)
+    })
   
-  randfor_predict <- reactive({
+  output$rfmodel <- renderPrint(rf_model())
   
-  rf_model <- train(Price_Paid ~ Type + Tenure + Bedrooms, 
-                    data = training_data(), 
-                    method = "rf", 
-                    preProcess = c("center", "scale"), 
-                    trControl = control, 
-                    tuneGrid = expand.grid(mtry = 1:2))
-
-  predict(rf_model, newdata = test_data())
- 
-  })
+  randfor_predict <- eventReactive(input$predict_rf, {
+    rf_model <- rf_model()
+    test <- test_data()
+    pred <- predict(rf_model, test)
+    rmse <- postResample(pred, obs = test$Price_Paid)
+    return(rmse)
+    })
   
-  output$rf_pred = renderUI(randfor_predict())  
+  output$rf_pred = renderPrint(randfor_predict())  
+  
+  
+  
+  
   
   
 })
