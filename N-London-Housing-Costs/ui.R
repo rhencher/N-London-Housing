@@ -36,12 +36,14 @@ about_info <- box(HTML("<h1>About</h1>
                         as well as the latitude and longitude of the home.
                        <br>
                        <h3>Data</h3>
-                       On the following page, the full dataset can be viewed. 
-                       The user has the option to view all variables, or to 
-                       select just those they are interested in. The user also 
-                       has the ability to subset the data by selling price.
+                       On the following page, the full dataset can be viewed and 
+                       downloaded. The user has the option to view all variables, 
+                       or to select just those they are interested in. The user 
+                       also has the ability to subset the data by selling price.
                        <br>
                        <h3>Data Exploration</h3>
+                       On the Data Exploration page, plots can be generated to 
+                       display price information for each explanatory variable.
                        <br>
                        <h3>Modeling</h3>
                        </p>"), 
