@@ -11,10 +11,10 @@ library(stargazer)
 
 ### 'About' page ###############################################################
 
-about_info <- HTML("<p>This data comes from propertydata.co.uk and explores the housing market for the N13 postcode of London, UK. I was a resident in this postcode for four years and was never able to break into the housing market, so this data is of personal interest. The data spans five years and includes information on 836 homes sold in this postcode during this time.</p>")
+about_info <- box(HTML("<p>This data comes from propertydata.co.uk and explores the housing market for the N13 postcode of London, UK. I was a resident in this postcode for four years and was never able to break into the housing market, so this data is of personal interest. The data spans five years and includes information on 836 homes sold in this postcode during this time.</p>"), width = 12)
 
 # Set up dashboard components
-about_tab <- tabItem("about", fluidRow(box(about_info, width = 8)))
+about_tab <- tabItem("about", fluidRow(about_info))
 
 
 ### 'Data' page ################################################################
@@ -50,12 +50,14 @@ grouping_choice <- box(checkboxInput("grouping",
                                                                 "Less than £375,000"))), 
                        width = 3)
 
+download_button <- box(downloadButton("download_data", "Download Data"), width = 2)
+
 # Create a datatable
 data_table <- box(dataTableOutput("table"), 
                   width = 12)
 
 # Set up dashboard components
-data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, data_table))
+data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, download_button, data_table))
 
 
 ### 'Data Exploration' page ####################################################
@@ -86,12 +88,13 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
 ### 'Modeling' page ############################################################
+modeling_intro <- box(HTML("<p>Below you may fit three supervised learning models: a multiple linear regression, regression or classification tree, and a random forest model.</p>"), width = 12)
 
 tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling"),
+  tabPanel("Modeling Info"),
   
   tabPanel("Model Fitting", 
            box(sliderInput("train_pct", 
@@ -107,9 +110,13 @@ tabs <- tabBox(
                               h4("Choose one or more explanatory variables:"), 
                               choices = c("Type", "Tenure", "Bedrooms"),
                               multiple = TRUE),
+               width = 3), 
+           box(checkboxGroupInput("model_choices", 
+                              h4("Select one or more models to view:"), 
+                              choices = c("Linear Regression", "Tree", "Random Forests")),
                width = 3),
            box(verbatimTextOutput("model"),
-               title = h4("Model Summary")),
+               title = h4("Model Summary"))
            ),
   
   tabPanel("Prediction", 
@@ -123,7 +130,7 @@ tabs <- tabBox(
 
 
 # Set up dashboard components
-modeling_tab <- tabItem("modeling", fluidRow(tabs))
+modeling_tab <- tabItem("modeling", fluidRow(modeling_intro, tabs))
 
 
 ### ??? ########################################################################

@@ -14,7 +14,7 @@ library(stargazer)
 shinyServer(function(input, output, session) {
 
   # Read in & clean data
-  data <- read_csv("/Users/rachelhencher/Downloads/PropertyData_prices_sold_prices_2022-12-09.csv")
+  data <- read_csv("N13PropertyData.csv")
     data$Type <- as.factor(data$Type)
     data$'New-build' <- as.factor(data$'New-build')
     data$Tenure <- as.factor(data$Tenure)
@@ -43,6 +43,15 @@ shinyServer(function(input, output, session) {
         select(input$variables)
     }
   })
+  
+  # Download data
+  output$download_data <- downloadHandler(
+    filename = function() {
+      paste("data-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(data, file)
+    })
   
   
   # Create plots
