@@ -231,5 +231,5 @@ shinyServer(function(input, output, session) {
     return(as.character(final_predictions))
   })
   
-  output$pred = renderUI(prediction())
+  output$final_pred = renderUI(prediction())
 })

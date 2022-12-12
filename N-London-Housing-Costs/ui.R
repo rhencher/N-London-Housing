@@ -215,7 +215,7 @@ tabs <- tabBox(
                selectInput("bedrooms", "Bedrooms:", choices = c("1", "2", "3", "4", "5", "6")),
                actionButton("prediction", "Predict"),
                HTML("<p><br>The predicted house price in GBP =<p>"),
-               uiOutput("pred"))
+               uiOutput("final_pred"))
            )
   )
 
