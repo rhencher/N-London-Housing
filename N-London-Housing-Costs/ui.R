@@ -212,7 +212,7 @@ tabs <- tabBox(
   tabPanel("Prediction",
            box(selectInput("type", "Type:", choices = c("Flat", "Detached house", "Semi-detached house","Terraced house")),
                selectInput("tenure", "Tenure:", choices = c("Leasehold", "Freehold")),
-               numericInput("bedrooms", "Bedrooms:", min = 1, max = 6, value = 1),
+               selectInput("bedrooms", "Bedrooms:", choices = c("1", "2", "3", "4", "5", "6")),
                actionButton("prediction", "Predict"),
                HTML("<p><br>The predicted house price in GBP =<p>"),
                uiOutput("pred"))
