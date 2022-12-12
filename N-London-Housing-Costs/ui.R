@@ -94,7 +94,14 @@ tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
-  tabPanel("Modeling Info"),
+  tabPanel("Modeling Info",
+           box(HTML("<p>Linear regression models make sense to explore in this scenario because they describe relationships between predictor and response variables, which is precisely what our goal is. In linear regression, we generate a model where we fit betas, our intercept and slope(s), by minimizing the sum of the squared residuals. However, in situations such as this where there are many predictors, we do not typically include all predictors in the model in order to prevent overfitting.<p>"), 
+               title = h4("Multiple Linear Regression")),
+           box(HTML("<p>A boosted tree model can look at variable importance measures and make predictions, but loses interpretability. A boosted tree model involves the slow training of trees. We begin by initializing predictions as 0, then find the residuals, fit a tree with d splits, update the predictors, and finally update the residuals and repeat.<p>"), 
+               title = h4("Boosted Tree Models")),
+           box(HTML("<p>Random forest models can only be used for prediction. Like a bagged tree model, we first create bootstrap sample, then train tree on this sample, repeat, and either average or use majority vote for final prediction depending on whether our predictors are continuous or categorical respectively. However, random forest models extends the idea of bagging and is usually better, but instead of including every predictor in each one of our trees, we only include a random subset of predictors. In a random forest model, we include p/3 predictors since our data is continuous.<p>"), 
+               title = h4("Random Forest Models"))
+           ),
   
   tabPanel("Model Fitting", 
            box(sliderInput("train_pct", 
@@ -124,13 +131,14 @@ tabs <- tabBox(
                                 verbatimTextOutput("rf_pred")),
                title = h4("Random Forest Model Summary")),
            box(verbatimTextOutput("btmodel"),
-               verbatimTextOutput("bt_pred"),
+               actionButton("predict_bt", 
+                            h4("Fit Stats")),
+               conditionalPanel("input.predict_bt == 1",
+                                verbatimTextOutput("bt_pred")),
                title = h4("Boosted Tree Model Summary"))
            ),
   
-  
-  tabPanel("Prediction", 
-           )
+  tabPanel("Prediction")
   )
 
 
