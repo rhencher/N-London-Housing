@@ -11,7 +11,41 @@ library(stargazer)
 
 ### 'About' page ###############################################################
 
-about_info <- box(HTML("<p>This data comes from propertydata.co.uk and explores the housing market for the N13 postcode of London, UK. I was a resident in this postcode for four years and was never able to break into the housing market, so this data is of personal interest. The data spans five years and includes information on 836 homes sold in this postcode during this time.</p>"), width = 12)
+about_info <- box(HTML("<h1>About</h1>
+                        <p>The data explored in the following pages comes from 
+                        <a href='https://propertydata.co.uk'>the following website</a> and 
+                        explores the housing market for the N13 postcode of 
+                        London, UK. The site allows the user to search for 
+                        information on properties sold from all over the UK and 
+                        allows the user to set the search criteria. I opted to 
+                        stick to the N13 postcode as I was a resident in this 
+                        postcode for four years and was never able to break into 
+                        the housing market, so this data is of personal interest. 
+                        I also opted to extend the search over the previous five 
+                        years and to include number of bedrooms for each property.
+                        An image of the generated data can be seen below. The 
+                        full dataset can be downloaded in the Data page.
+                        <p style='text-align:center;'>
+                        <img src='Capture.PNG' height='360' width='650'/>
+                        </p>
+                        The data includes information on 836 homes sold in this 
+                        postcode during the specified timeframe. For each home 
+                        sold, there is information on the date it was sold, the 
+                        address, the postcode, the type of home, whether it was 
+                        a new-build, the tenure, number of bedrooms, price paid, 
+                        as well as the latitude and longitude of the home.
+                       <br>
+                       <h3>Data</h3>
+                       On the following page, the full dataset can be viewed. 
+                       The user has the option to view all variables, or to 
+                       select just those they are interested in. The user also 
+                       has the ability to subset the data by selling price.
+                       <br>
+                       <h3>Data Exploration</h3>
+                       <br>
+                       <h3>Modeling</h3>
+                       </p>"), 
+                  width = 12)
 
 # Set up dashboard components
 about_tab <- tabItem("about", fluidRow(about_info))
@@ -119,11 +153,11 @@ tabs <- tabBox(
                               multiple = TRUE),
                width = 5), 
            checkboxInput("click", 
-                         h2(strong("Display models and summaries?"))), 
+                         h2(strong("Display models & summaries?"))), 
            conditionalPanel("input.click",
                             box(verbatimTextOutput("model"),
                                 actionButton("predict_lm", 
-                                             h4("Fit Stats")),
+                                             h4("Click for Fit Stats")),
                                 conditionalPanel("input.predict_lm == 1",
                                                  verbatimTextOutput("lm_pred")),
                                 title = h4("Linear Regression Model Summary")),
@@ -141,7 +175,7 @@ tabs <- tabBox(
                                             step = 1),
                                 verbatimTextOutput("rfmodel"),
                                 actionButton("predict_rf", 
-                                             h4("Fit Stats")),
+                                             h4("Click for Fit Stats")),
                                 conditionalPanel("input.predict_rf == 1",
                                                  verbatimTextOutput("rf_pred")),
                                 title = h4("Random Forest Model Summary")),
@@ -153,7 +187,7 @@ tabs <- tabBox(
                                             step = 1),
                                 verbatimTextOutput("btmodel"),
                                 actionButton("predict_bt", 
-                                             h4("Fit Stats")),
+                                             h4("Click for Fit Stats")),
                                 conditionalPanel("input.predict_bt == 1",
                                                  verbatimTextOutput("bt_pred")),
                                 title = h4("Boosted Tree Model Summary"))
