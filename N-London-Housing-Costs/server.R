@@ -196,9 +196,29 @@ shinyServer(function(input, output, session) {
   
   output$rf_pred = renderPrint(randfor_predict())  
   
+  bt_model <- reactive({
+    control <- trainControl(method = "cv", number = 5)
+    training <- training_data()
+    bt_mod <- train(Price_Paid ~ Type + Tenure + Bedrooms,
+                     data = training,
+                     method = "gbm",
+                     trControl = control,
+                     preProcess = c("center", "scale"),
+                     verbose = FALSE)
+    return(bt_mod)
+  })
   
+  output$btmodel <- renderPrint(bt_model())
   
+  bt_predict <- eventReactive(input$predict_bt, {
+    bt_model <- bt_model()
+    test <- test_data()
+    pred <- predict(bt_model, test)
+    rmse <- postResample(pred, obs = test$Price_Paid)
+    return(rmse)
+  })
   
+  output$bt_pred = renderPrint(bt_predict())  
   
   
 })

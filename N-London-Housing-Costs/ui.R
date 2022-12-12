@@ -112,23 +112,24 @@ tabs <- tabBox(
                               multiple = TRUE),
                width = 3), 
            box(verbatimTextOutput("model"),
+               actionButton("predict_lm", 
+                            h4("Fit Stats")),
+               conditionalPanel("input.predict_lm == 1",
+                                verbatimTextOutput("lm_pred")),
                title = h4("Linear Regression Model Summary")),
            box(verbatimTextOutput("rfmodel"),
-               title = h4("Random Forest Model Summary"))
+               actionButton("predict_rf", 
+                            h4("Fit Stats")),
+               conditionalPanel("input.predict_rf == 1",
+                                verbatimTextOutput("rf_pred")),
+               title = h4("Random Forest Model Summary")),
+           box(verbatimTextOutput("btmodel"),
+               verbatimTextOutput("bt_pred"),
+               title = h4("Boosted Tree Model Summary"))
            ),
   
   
   tabPanel("Prediction", 
-           box(actionButton("predict_lm", 
-                            h4("Predict lm")),
-               conditionalPanel("input.predict_lm == 1",
-                                verbatimTextOutput("lm_pred")),
-               width = 4),
-           box(actionButton("predict_rf", 
-                            h4("Predict rf")),
-               conditionalPanel("input.predict_rf == 1",
-                                verbatimTextOutput("rf_pred")),
-               width = 4)
            )
   )
 
