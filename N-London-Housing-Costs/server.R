@@ -175,12 +175,13 @@ shinyServer(function(input, output, session) {
   rf_model <- reactive({
     control <- trainControl(method = "cv", number = 5)
     training <- training_data()
-    rf <- train(Price_Paid ~ Type + Tenure + Bedrooms, 
-          data = training, 
-          method = "rf", 
-          preProcess = c("center", "scale"), 
-          trControl = control, 
-          tuneGrid = expand.grid(mtry = 1:3))
+    f <- f()
+    rf <- train(f, 
+                data = training, 
+                method = "rf", 
+                preProcess = c("center", "scale"), 
+                trControl = control, 
+                tuneGrid = expand.grid(mtry = 1:3))
     return(rf)
     })
   
@@ -199,12 +200,13 @@ shinyServer(function(input, output, session) {
   bt_model <- reactive({
     control <- trainControl(method = "cv", number = 5)
     training <- training_data()
-    bt_mod <- train(Price_Paid ~ Type + Tenure + Bedrooms,
-                     data = training,
-                     method = "gbm",
-                     trControl = control,
-                     preProcess = c("center", "scale"),
-                     verbose = FALSE)
+    f <- f()
+    bt_mod <- train(f,
+                    data = training,
+                    method = "gbm",
+                    trControl = control,
+                    preProcess = c("center", "scale"),
+                    verbose = FALSE)
     return(bt_mod)
   })
   
