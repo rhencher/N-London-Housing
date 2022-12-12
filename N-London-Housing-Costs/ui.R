@@ -13,8 +13,8 @@ library(stargazer)
 
 about_info <- box(HTML("<h1>About</h1>
                         <p>The data explored in the following pages comes from 
-                        <a href='https://propertydata.co.uk'>the following website</a> and 
-                        explores the housing market for the N13 postcode of 
+                        <a href='https://propertydata.co.uk'>the following website</a> 
+                        and explores the housing market for the N13 postcode of 
                         London, UK. The site allows the user to search for 
                         information on properties sold from all over the UK and 
                         allows the user to set the search criteria. I opted to 
@@ -44,8 +44,15 @@ about_info <- box(HTML("<h1>About</h1>
                        <h3>Data Exploration</h3>
                        On the Data Exploration page, plots can be generated to 
                        display price information for each explanatory variable.
+                       A table with relevant information will also be generated 
+                       for each option. For some, mean and five-number summaries 
+                       detailing price paid for each level of the variable can be 
+                       seen.
                        <br>
                        <h3>Modeling</h3>
+                       On the Modeling page, three types of models are discussed 
+                       and fitted to our data: a Multiple Linear Regression Model, 
+                       Boosted Tree Model, and Random Forest Model.
                        </p>"), 
                   width = 12)
 
@@ -73,10 +80,10 @@ variable_choices <- box(checkboxGroupInput("variables",
                                                         "Type", 
                                                         "Bedrooms", 
                                                         "Price_Paid")), 
-                        width = 3)
+                        width = 4)
 
 grouping_choice <- box(checkboxInput("grouping", 
-                                     h4(strong("Subset the data by price group?"))), 
+                                     h3("Subset the data by price group")), 
                        conditionalPanel("input.grouping", 
                                         selectInput("prices", 
                                                     h4("Price grouping:"), 
@@ -84,9 +91,9 @@ grouping_choice <- box(checkboxInput("grouping",
                                                                 "£750,000-£1,124,999", 
                                                                 "£375,000-£749,999", 
                                                                 "Less than £375,000"))), 
-                       width = 3)
+                       width = 4)
 
-download_button <- box(downloadButton("download_data", "Download Data"), width = 2)
+download_button <- box(downloadButton("download_data", "Download Dataset"), width = 2)
 
 # Create a datatable
 data_table <- box(dataTableOutput("table"), 
@@ -124,7 +131,7 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
 ### 'Modeling' page ############################################################
-modeling_intro <- box(HTML("<p>Below you will find three fitted supervised learning models: a multiple linear regression model, a regression tree, and a random forest model.</p>"), width = 12)
+modeling_intro <- box(HTML("<p><h3>Below you will find three fitted supervised learning models: a multiple linear regression model, a regression tree, and a random forest model.<h3></p>"), width = 12)
 
 tabs <- tabBox(
   id = "tabset1",
@@ -132,11 +139,11 @@ tabs <- tabBox(
   width = 12,
   tabPanel("Modeling Info",
            box(HTML("<p>Linear regression models make sense to explore in this scenario because they describe relationships between predictor and response variables, which is precisely what our goal is. In linear regression, we generate a model where we fit betas, our intercept and slope(s), by minimizing the sum of the squared residuals. However, in situations such as this where there are many predictors, we do not typically include all predictors in the model in order to prevent overfitting.<p>"), 
-               title = h4("Multiple Linear Regression")),
+               title = h4("Multiple Linear Regression"), width = 6),
            box(HTML("<p>A boosted tree model can look at variable importance measures and make predictions, but loses interpretability. A boosted tree model involves the slow training of trees. We begin by initializing predictions as 0, then find the residuals, fit a tree with d splits, update the predictors, and finally update the residuals and repeat.<p>"), 
-               title = h4("Boosted Tree Models")),
+               title = h4("Boosted Tree Models"), width = 6),
            box(HTML("<p>Random forest models can only be used for prediction. Like a bagged tree model, we first create bootstrap sample, then train tree on this sample, repeat, and either average or use majority vote for final prediction depending on whether our predictors are continuous or categorical respectively. However, random forest models extends the idea of bagging and is usually better, but instead of including every predictor in each one of our trees, we only include a random subset of predictors. In a random forest model, we include p/3 predictors since our data is continuous.<p>"), 
-               title = h4("Random Forest Models"))
+               title = h4("Random Forest Models"), width = 6)
            ),
   
   tabPanel("Model Fitting", 
@@ -153,9 +160,9 @@ tabs <- tabBox(
                               h3("Choose one or more explanatory variables:"), 
                               choices = c("Type", "Tenure", "Bedrooms"),
                               multiple = TRUE),
-               width = 5), 
-           checkboxInput("click", 
-                         h2(strong("Display models & summaries?"))), 
+               width = 4), 
+           box(checkboxInput("click", 
+                         h3("Display models & summaries")), width = 4), 
            conditionalPanel("input.click",
                             box(verbatimTextOutput("model"),
                                 actionButton("predict_lm", 
@@ -204,7 +211,7 @@ tabs <- tabBox(
 modeling_tab <- tabItem("modeling", fluidRow(modeling_intro, tabs))
 
 
-### ??? ########################################################################
+### Overall setup ##############################################################
 
 dashboardPage(
   skin = "purple",
