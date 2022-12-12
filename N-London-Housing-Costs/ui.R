@@ -141,14 +141,25 @@ tabs <- tabBox(
   height = "1000px",
   width = 12,
   tabPanel("Modeling Info",
-  box(HTML("<p><h3>Multiple Linear Regression</h3>
-  Linear regression models make sense to explore in this scenario because they describe relationships between predictor and response variables, which is precisely what our goal is. In linear regression, we generate a model where we fit betas, our intercept and slope(s), by minimizing the sum of the squared residuals. However, in situations such as this where there are many predictors, we do not typically include all predictors in the model in order to prevent overfitting.
-  <br>
-  <h3>Boosted Tree Models</h3>
-  A boosted tree model can look at variable importance measures and make predictions, but loses interpretability. A boosted tree model involves the slow training of trees. We begin by initializing predictions as 0, then find the residuals, fit a tree with d splits, update the predictors, and finally update the residuals and repeat.
+  box(HTML("<p><h3>Multiple Linear Regression Models</h3>
+  Linear regression models make sense to explore in this scenario because they 
+  describe relationships between predictor and response variables, which is precisely 
+  what our goal is. In linear regression, we generate a model where we fit betas, 
+  our intercept and slope(s), by minimizing the sum of the squared residuals. The 
+  user here has the option to determine how many explanatory variables they wish 
+  to consider when fitting the model on the following page. If they were to fit 
+  a full model, it would be of the form:<p>"),
+  withMathJax(),
+  uiOutput('reg'),
+  HTML("<p><h3>Boosted Tree Models</h3>
+  A boosted tree model can look at variable importance measures and make predictions, 
+  but loses interpretability. A boosted tree model involves the slow training of 
+  trees. We begin by initializing predictions as 0, then find the residuals, fit 
+  a tree with d splits, update the predictors, and finally update the residuals 
+  and repeat.
   <br>
   <h3>Random Forest Models</h3>
-  Random forest models can only be used for prediction. Like a bagged tree model, we first create bootstrap sample, then train tree on this sample, repeat, and either average or use majority vote for final prediction depending on whether our predictors are continuous or categorical respectively. However, random forest models extends the idea of bagging and is usually better, but instead of including every predictor in each one of our trees, we only include a random subset of predictors. In a random forest model, we include p/3 predictors since our data is continuous.<p>"), 
+  Random forest models can only be used for prediction. Like a bagged tree model, we first create bootstrap sample, then train tree on this sample, repeat, and either average or use majority vote for final prediction depending on whether our predictors are continuous or categorical respectively. However, random forest models extends the idea of bagging and are usually better, but instead of including every predictor in each one of our trees, we only include a random subset of predictors. The user has the option to determine how many predictors to use on the following page.<p>"), 
       width = 12)
            ),
   
@@ -215,7 +226,7 @@ tabs <- tabBox(
                selectInput("bedrooms", "Bedrooms:", choices = c("1", "2", "3", "4", "5", "6")),
                actionButton("prediction", "Predict"),
                HTML("<p><br>The predicted house price in GBP =<p>"),
-               uiOutput("pred"))
+               uiOutput("final_pred"))
            )
   )
 

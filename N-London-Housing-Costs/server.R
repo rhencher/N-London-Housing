@@ -107,6 +107,10 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # Write equation for linear reg model info
+  output$reg <- renderUI({
+    withMathJax('$$y=\\beta_0+\\beta_1x_1+\\beta_2x_2+\\beta_3x_3+\\epsilon$$')
+  })
 
   # Split data into training and test set
   input_dataset_model <- reactive({
@@ -231,5 +235,5 @@ shinyServer(function(input, output, session) {
     return(as.character(final_predictions))
   })
   
-  output$pred = renderUI(prediction())
+  output$final_pred = renderUI(prediction())
 })
