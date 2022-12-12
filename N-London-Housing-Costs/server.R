@@ -84,6 +84,7 @@ shinyServer(function(input, output, session) {
     }
   })
 
+  # Create summaries paired to plots
   output$summaries <- renderDataTable({
     if (input$plot_var == "Price_Paid") {
       data %>%
@@ -148,19 +149,16 @@ shinyServer(function(input, output, session) {
     renderText(paste("Testing data:", NROW(test_data()), "records"))
   
   
-  
-
+  # Set up linear regression model
   f <- reactive({
     as.formula(paste("Price_Paid", "~."))
   })
-  
   
   linear_model <- reactive({
     lm(f(), data = training_data())
   })
   
   output$model <- renderPrint(summary(linear_model()))
-  
   
   lm_predict <- eventReactive(input$predict_lm, {
     lm <- linear_model()
@@ -172,6 +170,7 @@ shinyServer(function(input, output, session) {
   
   output$lm_pred = renderPrint(lm_predict())
   
+  # Set up random forests model
   rf_model <- reactive({
     control <- trainControl(method = "cv", number = input$cv1)
     training <- training_data()
@@ -198,6 +197,7 @@ shinyServer(function(input, output, session) {
   
   output$rf_pred = renderPrint(randfor_predict())  
   
+  # Set up boosted tree model
   bt_model <- reactive({
     control <- trainControl(method = "cv", number = input$cv2)
     training <- training_data()
@@ -224,4 +224,16 @@ shinyServer(function(input, output, session) {
   output$bt_pred = renderPrint(bt_predict())  
   
   
+  # TEXT
+  prediction <- eventReactive(input$prediction, {
+    lm <- linear_model()
+    pred_df <- data.frame(Type = input$type,
+                         Tenure = input$tenure,
+                         Bedrooms = input$bedrooms)
+    pred_df <- pred_df[,input$expl_vars]
+    final_pred <- predict(lm, pred_df)
+    return(as.character(final_pred))
+  })
+  
+  output$pred = renderUI(prediction())
 })

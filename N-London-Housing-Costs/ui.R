@@ -131,7 +131,10 @@ exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
 
 
 ### 'Modeling' page ############################################################
-modeling_intro <- box(HTML("<p><h3>Below you will find three fitted supervised learning models: a multiple linear regression model, a regression tree, and a random forest model.<h3></p>"), width = 12)
+modeling_intro <- box(HTML("<p><h3>Below you will find three fitted supervised 
+                           learning models: a multiple linear regression model, 
+                           a regression tree, and a random forest model.<h3></p>"), 
+                      width = 12)
 
 tabs <- tabBox(
   id = "tabset1",
@@ -203,7 +206,13 @@ tabs <- tabBox(
                             )
            ),
   
-  tabPanel("Prediction")
+  tabPanel("Prediction",
+           box(numericInput("type", "Type:", min = 1, max = 4, value = 1),
+               numericInput("tenure", "Tenure:", min = 1, max = 2, value = 1),
+               numericInput("bedrooms", "Bedrooms:", min = 1, max = 6, value = 1),
+               actionButton("prediction", "Predict"),
+               uiOutput("pred"))
+           )
   )
 
 
