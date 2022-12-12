@@ -25,5 +25,5 @@ install.packages(c("shiny", "shinydashboard", "DT", "dplyr", "rio", "stargazer",
 
 ## Run the app
 ```{r}
-shiny::runGitHub(repo = "N-London-Housing", username = "rhencher", ref = "main")
+shiny::runGitHub(repo = "N-London-Housing", username = "rhencher", ref = "main", subdir = "N-London-Housing-Costs")
 ```
