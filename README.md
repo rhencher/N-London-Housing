@@ -1,6 +1,6 @@
 # House prices in London's N13 postcode
 
-This app provides information on home prices in the N13 postcode of London, UK over the past five years. Users can investigate a variety of variables in order to determine how they affect the price of homes in this area. Variables included in the dataset are `Date`, `Address`, `Postcode`, `Type`, `New_Build`, `Tenure`, `Bedrooms`, `Price_Paid`, `Latitude`, and `Longitude`. `Price_Paid` is the targeted response variable.
+This app provides information on home prices in the N13 postcode of London, UK over the past five years. Users can investigate a variety of variables in order to determine how they affect the price of homes in this area. Variables included in the dataset are `Date`, `Address`, `Postcode`, `Type`, `New_Build`, `Tenure`, `Bedrooms`, `Price_Paid`, `Latitude`, and `Longitude`.  The data comes from propertydata.co.uk and includes infromation on 836 properties.
 
 ## Install relevant packages
 
