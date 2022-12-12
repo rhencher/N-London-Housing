@@ -222,14 +222,17 @@ shinyServer(function(input, output, session) {
   
   # Prediction using linear regression model
   prediction <- eventReactive(input$prediction, {
+    test <- test_data()
     lm <- linear_model()
-    pred_df <- data.frame(Type = input$type,
-                          Tenure = input$tenure,
-                          Bedrooms = input$bedrooms)
-    pred_df <- pred_df[,input$expl_vars]
     final_pred <- predict(lm, test_data())
-    return(as.character(final_pred))
+    new_data <- cbind(test,final_pred)
+    final_data <- new_data %>% 
+      as_tibble() %>% 
+      filter(Type == input$type, Tenure == input$tenure, Bedrooms == input$bedrooms) %>%
+      select(final_pred)
+    final_data <- round(final_data,2)
+    return(as.character(final_data[1,]))
   })
   
-  output$pred = renderPrint(prediction())
+  output$pred = renderUI(prediction())
 })
