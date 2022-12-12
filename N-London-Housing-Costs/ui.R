@@ -36,19 +36,28 @@ about_info <- box(HTML("<h1>About</h1>
                        downloaded. The user has the option to view all variables, 
                        or to select just those they are interested in. The user 
                        also has the ability to subset the data by selling price.
+                       I divided the price range into four groupings of equal 
+                       length and assigned each house sold to the correct group.
                        <br>
                        <h3>Data Exploration</h3>
                        On the Data Exploration page, plots can be generated to 
                        display price information for each explanatory variable.
                        A table with relevant information will also be generated 
-                       for each option. For some, mean and five-number summaries 
+                       for each option. For some, five-number summaries in boxplots
                        detailing price paid for each level of the variable can be 
-                       seen.
+                       seen. For others, different types of plots that are more 
+                       relevant are displayed, such as a histogram or scatterplot.
                        <br>
                        <h3>Modeling</h3>
                        On the Modeling page, three types of models are discussed 
                        and fitted to our data: a Multiple Linear Regression Model, 
-                       Boosted Tree Model, and Random Forest Model.
+                       a Boosted Tree Model, and a Random Forest Model. Three 
+                       explanatory variables are explored to see their effect on 
+                       the response, price. Latitude and longitude, as well as date, 
+                       were not suitable for a regression model. Additionally, 
+                       the variable, New_Build, was also left out due to the fact 
+                       that none of the 800+ homes sold in this postcode were 
+                       built new over the past five years.
                        </p>"), 
                   width = 12)
 
@@ -148,7 +157,7 @@ tabs <- tabBox(
                            h3("Train/test split %"), 
                            min = 0, 
                            max = 100, 
-                           value = 75,
+                           value = 65,
                            step = 1), 
                textOutput("cntTrain"), 
                textOutput("cntTest"),

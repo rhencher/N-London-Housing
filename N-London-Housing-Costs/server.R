@@ -228,7 +228,9 @@ shinyServer(function(input, output, session) {
     new_data <- cbind(test,final_pred)
     final_data <- new_data %>% 
       as_tibble() %>% 
-      filter(Type == input$type, Tenure == input$tenure, Bedrooms == input$bedrooms) %>%
+      filter(Type == input$type, 
+             Tenure == input$tenure, 
+             Bedrooms == input$bedrooms) %>%
       select(final_pred)
     final_data <- round(final_data,2)
     return(as.character(final_data[1,]))
