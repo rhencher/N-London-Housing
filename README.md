@@ -1,6 +1,6 @@
 # House prices in London's N13 postcode
 
-Brief description of the app and its purpose.
+This app provides information on home prices in the N13 postcode of London, UK over the past five years. Users can investigate a variety of variables in order to determine how they affect the price of homes in this area.
 
 ## Install relevant packages
 
