@@ -173,15 +173,16 @@ shinyServer(function(input, output, session) {
   output$lm_pred = renderPrint(lm_predict())
   
   rf_model <- reactive({
-    control <- trainControl(method = "cv", number = 5)
+    control <- trainControl(method = "cv", number = input$cv1)
     training <- training_data()
     f <- f()
+    m <- input$mtry
     rf <- train(f, 
                 data = training, 
                 method = "rf", 
                 preProcess = c("center", "scale"), 
                 trControl = control, 
-                tuneGrid = expand.grid(mtry = 1:3))
+                tuneGrid = expand.grid(mtry = 1:m))
     return(rf)
     })
   
@@ -198,7 +199,7 @@ shinyServer(function(input, output, session) {
   output$rf_pred = renderPrint(randfor_predict())  
   
   bt_model <- reactive({
-    control <- trainControl(method = "cv", number = 5)
+    control <- trainControl(method = "cv", number = input$cv2)
     training <- training_data()
     f <- f()
     bt_mod <- train(f,
