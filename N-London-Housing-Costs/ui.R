@@ -7,6 +7,7 @@ library(stargazer)
 
 ### 'About' page ###############################################################
 
+# Intro text
 about_info <- box(HTML("<h1>About</h1>
                         <p>The data explored in the following pages comes from 
                         <a href='https://propertydata.co.uk'>the following website</a> 
@@ -84,9 +85,11 @@ variable_choices <- box(checkboxGroupInput("variables",
                                                         "Postcode", 
                                                         "Type", 
                                                         "Bedrooms", 
-                                                        "Price_Paid")), 
+                                                        "Price_Paid")
+                                           ), 
                         width = 4)
 
+# Subset by grouping option
 grouping_choice <- box(checkboxInput("grouping", 
                                      h3("Subset the data by price group")), 
                        conditionalPanel("input.grouping", 
@@ -95,9 +98,11 @@ grouping_choice <- box(checkboxInput("grouping",
                                                     choices = c("£1,125,000 or more", 
                                                                 "£750,000-£1,124,999", 
                                                                 "£375,000-£749,999", 
-                                                                "Less than £375,000"))), 
+                                                                "Less than £375,000"))
+                                        ), 
                        width = 4)
 
+#Download data button
 download_button <- box(downloadButton("download_data", "Download Dataset"), width = 2)
 
 # Create a datatable
@@ -109,6 +114,8 @@ data_tab <- tabItem("data", fluidRow(variable_choices, grouping_choice, download
 
 
 ### 'Data Exploration' page ####################################################
+
+# Set up selection box for plots
 plot_generator <-  box(selectInput("plot_var", 
                                     h3("Select variable for data exploration:"), 
                                     choices = c("Type", 
@@ -124,22 +131,25 @@ plot_generator <-  box(selectInput("plot_var",
                                                     min = 25000, 
                                                     max = 500000, 
                                                     value = 125000, 
-                                                    step = 25000)))
+                                                    step = 25000))
+                       )
 
-# Graph
-graph <- box(plotOutput("plots"), 
+# Produce tables for each plot selection
+tables <- box(plotOutput("plots"), 
              dataTableOutput("summaries"), 
              width = 8)
 
 # Set up dashboard components
-exploration_tab <- tabItem("exploration", fluidRow(plot_generator, graph))
-
+exploration_tab <- tabItem("exploration", fluidRow(plot_generator, tables))
 
 ### 'Modeling' page ############################################################
+
+# Set up tabs for 3 subpages and fill in info
 tabs <- tabBox(
   id = "tabset1",
   height = "1000px",
   width = 12,
+  
   tabPanel("Modeling Info",
   box(HTML("<p><h3>Multiple Linear Regression Models</h3>
   Linear regression models make sense to explore in this scenario because they 
@@ -159,7 +169,14 @@ tabs <- tabBox(
   and repeat.
   <br>
   <h3>Random Forest Models</h3>
-  Random forest models can only be used for prediction. Like a bagged tree model, we first create bootstrap sample, then train tree on this sample, repeat, and either average or use majority vote for final prediction depending on whether our predictors are continuous or categorical respectively. However, random forest models extends the idea of bagging and are usually better, but instead of including every predictor in each one of our trees, we only include a random subset of predictors. The user has the option to determine how many predictors to use on the following page.<p>"), 
+  Random forest models can only be used for prediction. Like a bagged tree model, 
+       we first create bootstrap sample, then train tree on this sample, repeat, 
+       and either average or use majority vote for final prediction depending on 
+       whether our predictors are continuous or categorical respectively. However, 
+       random forest models extends the idea of bagging and are usually better, 
+       but instead of including every predictor in each one of our trees, we only 
+       include a random subset of predictors. The user has the option to determine 
+       how many predictors to use on the following page.<p>"), 
       width = 12)
            ),
   
